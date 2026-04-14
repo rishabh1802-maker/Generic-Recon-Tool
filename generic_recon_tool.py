@@ -3,6 +3,10 @@ import pandas as pd
 from io import BytesIO
 from fuzzywuzzy import fuzz
 
+#Ignore warnings for cleaner output
+import warnings
+warnings.filterwarnings("ignore")
+
 # ===============================================================
 # PAGE CONFIG
 # ===============================================================
@@ -194,117 +198,12 @@ if st.button("🚀 Run Reconciliation", disabled=st.session_state.is_running):
     with st.spinner("Reconciling…"):
         # do_actual_reconciliation_work()
 
-
     # -----------------------------------------------------------
-    # TABLE 1 — Common Identifier Missing in BASE File (File 1)
-    # -----------------------------------------------------------
-   
-    # -----------------------------------------------------------
-    # TABLE 1 — Common Identifier Present in File 2 but NOT in BASE
-    # -----------------------------------------------------------
-
-    # miss_common_base = df1[
-    #     df1[common_1].isna()
-    #     | (df1[common_1].astype(str).str.strip() == "")
-    # ]
-
-    # df1_valid = df1.drop(miss_common_base.index)
-
-    # base_keys = (
-    #     df1_valid[common_1]
-    #     .astype(str)
-    #     .str.strip()
-    #     .unique()
-    #     .tolist()
-    # )
-
-    # present_in_comp_not_base = df2[
-    #     ~df2[common_2]
-    #     .astype(str)
-    #     .str.strip()
-    #     .isin(base_keys)
-    # ]
-
-    # -----------------------------------------------------------
-    # TABLE 2 — MISMATCHES (Missing indicator OR Value mismatch)
+    # TABLE  — MISMATCHES (Missing indicator OR Value mismatch)
     # -----------------------------------------------------------
         mismatches = []
         not_found_in_base = []
         not_found_in_comparison = []
-
-        # for _, row1 in df1_valid.iterrows():
-
-        #     key = str(row1[common_1]).strip()
-
-        #     candidates = df2[
-        #         df2[common_2].astype(str).str.strip() == key
-        #     ]
-
-        #     if candidates.empty:
-        #         continue
-
-        #     print(f"Processing Key: {key} | Candidates in File 2: {candidates}")
-
-        #     row2 = candidates.iloc[0]
-
-        #     raw_v1 = row1[match_1]
-        #     raw_v2 = row2[match_2]
-
-        #     v1_missing = pd.isna(raw_v1) or str(raw_v1).strip() == ""
-        #     v2_missing = pd.isna(raw_v2) or str(raw_v2).strip() == ""
-
-        #     v1 = normalize_value(raw_v1) if not v1_missing else ""
-        #     v2 = normalize_value(raw_v2) if not v2_missing else ""
-
-        #     # if v1_missing or v2_missing or v1 != v2:
-        #     #     mismatches.append({
-        #     #         "Common_Key": key,
-        #     #         "File1_Indicator": match_1,
-        #     #         "File1_Value": raw_v1,
-        #     #         "File2_Indicator": match_2,
-        #     #         "File2_Value": raw_v2,
-        #     #         "Mismatch_Reason": (
-        #     #             "Missing in File 1 (Base)" if v1_missing else
-        #     #             "Missing in File 2 (Comparison)" if v2_missing else
-        #     #             "Value Mismatch"
-        #     #         )
-        #     #     })
-
-            
-        #     # Determine mismatch
-        #     is_mismatch = False
-        #     reason = ""
-        #     score = None
-
-        #     if v1_missing:
-        #         is_mismatch = True
-        #         reason = "Missing in File 1"
-
-        #     elif v2_missing:
-        #         is_mismatch = True
-        #         reason = "Missing in File 2"
-
-        #     else:
-        #         if use_fuzzy:
-        #             score = fuzzy_score(v1, v2)
-        #             if score < fuzzy_threshold:
-        #                 is_mismatch = True
-        #                 reason = f"Fuzzy Mismatch"
-        #         else:
-        #             if v1 != v2:
-        #                 is_mismatch = True
-        #                 reason = "Value Mismatch"
-
-        #     if is_mismatch:
-        #         mismatches.append({
-        #             "Common_Key": key,
-        #             "File1_Indicator": match_1,
-        #             "File1_Value": raw_v1,
-        #             "File2_Indicator": match_2,
-        #             "File2_Value": raw_v2,
-        #             "Mismatch_Reason": reason,
-        #             "Matching_Score": score
-        #         })
 
 
         for _, comp_row in df2.iterrows():
@@ -397,15 +296,9 @@ if st.button("🚀 Run Reconciliation", disabled=st.session_state.is_running):
         return buf.getvalue()
 
     # -----------------------------------------------------------
-    # OUTPUT TABLES (ONLY 2)
+    # OUTPUT TABLES (ONLY 3)
     # -----------------------------------------------------------
-    # st.subheader("🔸 Common Identifier Missing in BASE File (File 1)")
-    # st.dataframe(miss_common_base, use_container_width=True)
-    # st.download_button(
-    #     "Download",
-    #     to_excel(miss_common_base),
-    #     "common_id_missing_in_base.xlsx"
-    # )
+
 
 
     # Removing duplicates from not_found_in_comparison
@@ -444,6 +337,8 @@ if st.button("🚀 Run Reconciliation", disabled=st.session_state.is_running):
         "common_id_present_in_comparison_not_in_base.xlsx"
     )
 
+
+    #  Mismatches Table (Value Mismatches + Missing Indicators)
     st.subheader("🔸 Matching Indicator Mismatches (Incl. Missing)")
     st.markdown(
             f"<h3 style='color:#b00020;'>❌ Total Mismatches / Breaks: {len(df_mismatches)}</h3>",
