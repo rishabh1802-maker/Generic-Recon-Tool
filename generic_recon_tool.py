@@ -11,7 +11,39 @@ warnings.filterwarnings("ignore")
 # PAGE CONFIG
 # ===============================================================
 st.set_page_config(page_title="Generic Reconciliation Tool", layout="wide")
-st.title("🔍 Two‑File Excel Reconciliation Tool")
+
+
+# ==========================
+# ✅ Header
+# ==========================
+
+col_logo, col_title = st.columns([1, 6])
+
+with col_logo:
+    st.markdown(
+        """
+        <div style="margin-top: 50px; margin-bottom: 0px;">
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.image("apex-group-logo.png", width=200)
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+with col_title:
+    st.markdown("""
+            <h1 style="
+                color:#004B8D;
+                margin-top:50px;
+                margin-bottom:0px;
+            ">
+                Reconciliation Tool
+            </h1>
+        """, unsafe_allow_html=True)
+
+# st.markdown("<hr>", unsafe_allow_html=True)
 
 st.write(
     "1️⃣ Upload files → 2️⃣ Select Common Identifier → "
