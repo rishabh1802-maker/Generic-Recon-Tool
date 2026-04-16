@@ -253,7 +253,7 @@ if st.button("🚀 Run Reconciliation", disabled=st.session_state.is_running):
         progress_bar = st.progress(0)
         total_rows = len(df2)
 
-        idx=0
+        idx=1
 
         for _, comp_row in df2.iterrows():
 
