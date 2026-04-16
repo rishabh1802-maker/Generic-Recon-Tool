@@ -62,9 +62,9 @@ for key in ["headers_loaded", "matching_selected", "df1", "df2"]:
 # ===============================================================
 c1, c2 = st.columns(2)
 with c1:
-    file1 = st.file_uploader("📘 Upload File 1 (BASE)", type="xlsx")
+    file1 = st.file_uploader("📘 Upload Base Audit File (File 1)", type=["xlsx", "csv"])
 with c2:
-    file2 = st.file_uploader("📗 Upload File 2 (COMPARISON)", type="xlsx")
+    file2 = st.file_uploader("📗 Upload Comparison Audit File (File 2)", type=["xlsx", "csv"])
 
 if not file1 or not file2:
     st.warning("Upload both files to proceed.")
@@ -76,9 +76,20 @@ st.markdown("---")
 # ===============================================================
 # STEP 2 — LOAD HEADERS
 # ===============================================================
+
+def read_uploaded_file(uploaded_file):
+    if uploaded_file.name.endswith(".csv"):
+        return pd.read_csv(uploaded_file)
+    elif uploaded_file.name.endswith(".xlsx"):
+        return pd.read_excel(uploaded_file)
+    else:
+        st.error("Unsupported file format")
+        st.stop()
+
+
 if st.button("✅ Choose Common Identifier"):
-    df1 = pd.read_excel(file1)
-    df2 = pd.read_excel(file2)
+    df1 = read_uploaded_file(file1)
+    df2 = read_uploaded_file(file2)
 
     df1.columns = df1.columns.str.strip()
     df2.columns = df2.columns.str.strip()
@@ -295,7 +306,7 @@ if st.button("🚀 Run Reconciliation", disabled=st.session_state.is_running):
                     score = fuzzy_score(base_val, comp_val)
                     if score < fuzzy_threshold:
                         is_mismatch = True
-                        reason = "Fuzzy Mismatch"
+                        reason = "String Value Mismatch"
                 else:
                     if base_val != comp_val:
                         is_mismatch = True
