@@ -249,27 +249,7 @@ if st.button("🚀 Run Reconciliation", disabled=st.session_state.is_running):
         not_found_in_comparison = []
 
 
-        status_placeholder = st.empty()
-        progress_bar = st.progress(0)
-        total_rows = len(df2)
-
-        idx=0
-
         for _, comp_row in df2.iterrows():
-
-
-            
-            # ✅ Show current row
-            status_placeholder.info(
-                f"Processing row {idx+1} of {total_rows}"
-            )
-
-            # Increment row index
-            idx += 1
-
-            # ✅ Update progress bar
-            progress_bar.progress(idx / total_rows)
-
 
             comp_key = str(comp_row[common_2]).strip()
 
@@ -343,7 +323,7 @@ if st.button("🚀 Run Reconciliation", disabled=st.session_state.is_running):
                     "Matching Score": score
                 })
 
-            
+
         df_mismatches = pd.DataFrame(mismatches)
 
     st.success("✅ Reconciliation Completed")
