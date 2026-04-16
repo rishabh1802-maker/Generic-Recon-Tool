@@ -261,7 +261,7 @@ if st.button("🚀 Run Reconciliation", disabled=st.session_state.is_running):
             
             # ✅ Show current row
             status_placeholder.info(
-                f"Processing row {idx} of {total_rows}"
+                f"Processing row {idx+1} of {total_rows}"
             )
 
             # Increment row index
